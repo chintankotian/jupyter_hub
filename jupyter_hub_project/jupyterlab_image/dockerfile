@@ -1,0 +1,19 @@
+FROM jupyter/base-notebook:latest
+
+# Install Jupyter Enterprise Gateway client support
+RUN pip install jupyter_enterprise_gateway
+
+USER root
+# JupyterLab
+RUN pip install jupyterlab
+
+USER jovyan
+# Kernel config: point to Enterprise Gateway
+RUN mkdir -p /home/jovyan/.local/share/jupyter/kernels
+
+# Set environment to use remote kernels
+ENV JUPYTER_GATEWAY_URL=http://enterprise-gateway:8888
+# ENV JUPYTER_GATEWAY_HTTP_HEADERS='{"Authorization": "token YOUR_TOKEN_IF_NEEDED"}'
+ENV KERNEL_LAUNCH_TIMEOUT=40
+
+# Optional: configure kernels explicitly (can be managed via EG too)

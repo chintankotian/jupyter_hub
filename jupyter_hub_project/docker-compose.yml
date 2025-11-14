@@ -1,0 +1,43 @@
+services:
+  jupyterhub:
+    # image: jupyterhub/jupyterhub:latest
+    build:
+      context: ./jupyterlab_image
+      dockerfile: dockerfile
+    container_name: jupyterhub
+    ports:
+      - "8000:8000"
+    volumes:
+      - /Users/CKOTIAN/Docker_files/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+      - /var/run/docker.sock:/var/run/docker.sock
+    # command: >
+    #   bash -c "pip install dockerspawner && jupyterhub -f /srv/jupyterhub/jupyterhub_config.py"
+    networks:
+      - jupyterhub-net-test
+
+
+  # Optional: local enterprise-gateway (if you want to run it here)
+  enterprise-gateway:
+    image: elyra/enterprise-gateway:dev
+    container_name: enterprise-gateway
+    # user: root
+    volumes:
+      - /Users/CKOTIAN/Docker_files/kernels/:/usr/local/share/jupyter/kernels
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8888:8888"
+    environment:
+      # - EG_KERNEL_IMAGES='spark_python_kubernetes:spark_kernel:latest'
+      - EG_ALLOW_ALL_USERS=true
+      - KUBECONFIG=/etc/eg-kube/config
+      # - EG_DEFAULT_PROCESS_PROXY_CLASS=enterprise_gateway.services.processproxies.spark_operator.SparkOperatorProcessProxy
+      # - KUBERNETES_SERVICE_HOST=192.168.49.2
+      # - KUBERNETES_SERVICE_PORT=53251
+    networks:
+      - jupyterhub-net-test
+
+networks:
+  jupyterhub-net-test:
+    name: jupyterhub-net-test
+    driver: bridge
+
