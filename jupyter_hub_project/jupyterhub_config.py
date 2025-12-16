@@ -1,4 +1,4 @@
-rom dockerspawner import DockerSpawner
+from dockerspawner import DockerSpawner
 
 c.JupyterHub.spawner_class = DockerSpawner
 c.DockerSpawner.image = 'user-jupyterlab'
