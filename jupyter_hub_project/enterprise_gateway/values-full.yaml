@@ -1,0 +1,28 @@
+service:
+  type: "NodePort"
+  ports:
+    - name: "http"
+      port: 8888
+      targetPort: 8888
+      # nodePort: 32652  # optional fixed NodePort
+    - name: "http-response"
+      port: 8877
+      targetPort: 8877
+      # nodePort: 30481  # optional fixed NodePort
+
+deployment:
+  resources:
+    limits:
+      cpu: 2
+      memory: 10Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
+  replicas: 2
+  terminationGracePeriodSeconds: 60
+
+kip:
+  enabled: false
+
+ingress:
+  enabled: false
