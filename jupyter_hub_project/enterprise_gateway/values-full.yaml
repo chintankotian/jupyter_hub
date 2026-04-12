@@ -22,7 +22,13 @@ deployment:
   terminationGracePeriodSeconds: 60
 
 kip:
-  enabled: false
+  enabled: true
 
-ingress:
-  enabled: false
+kernel:
+  allowedKernels: 
+    - "python3"
+    - "ir" 
+    - "scala"
+    - "spark_python_kubernetes"
+    - "spark_r_kubernetes"
+    - "spark_scala_kubernetes"

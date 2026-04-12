@@ -3,10 +3,15 @@ prePuller:
     enabled: false
 
 singleuser:
+  # image:
+  #   name: user-jupyterlab
+  #   tag: latest
   # Defines the default image
-  image:
-    name: jupyter/minimal-notebook
-    tag: 2343e33dec46
+  initContainers:
+    - name: install-gateway
+      image: jupyter/minimal-notebook:latest
+      command: ["pip", "install", "jupyter_enterprise_gateway"]
+
   profileList:
     - display_name: "Minimal environment"
       description: "To avoid too much bells and whistles: Python."
@@ -31,3 +36,16 @@ singleuser:
                 - "-c"
                 - >
                   gitpuller https://github.com/data-8/materials-fa17 master materials-fa;
+  # Applied to user notebook pods (not the hub pod). After changing this, stop your
+  # server from JupyterHub (File → Hub Control Panel → Stop My Server) and start again,
+  # or delete the user pod—Helm upgrade alone does not recreate running servers.
+  extraEnv:
+    JUPYTER_GATEWAY_URL: "http://enterprise-gateway:8888"
+    JUPYTER_GATEWAY_CONNECT_TIMEOUT: "120"
+    JUPYTER_GATEWAY_REQUEST_TIMEOUT: "120"
+  # Default Z2JH user NetworkPolicy blocks egress to private IPs (ClusterIPs). Without
+  # this, user pods cannot reach Enterprise Gateway on a ClusterIP service.
+  # Tighten in production with a specific egress rule to the gateway pods instead.
+  networkPolicy:
+    egressAllowRules:
+      privateIPs: true

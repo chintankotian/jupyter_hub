@@ -18,7 +18,7 @@ helm  upgrade --install  enterprise-gateway \
   https://github.com/jupyter-server/enterprise_gateway/releases/download/v3.2.3/jupyter_enterprise_gateway_helm-3.2.3.tar.gz \
    --kube-context minikube \
    --namespace enterprise-gateway \
-   -f values-full.yaml
+   -f ./jupyter_hub_project/enterprise_gateway/values-full.yaml
 
 ```
 
